@@ -3,6 +3,9 @@
 git clone https://github.com/RustySoldier/ASU_DBMS_PROJECT.git
 
 ## To add something to the repository
+
+###Add the files you want to upload in the folder with .git file
+
 ### Stay in the folder that has the .git file
 
 1. git status ---> gives u status of all the files that are there updated/or up to date
