@@ -57,19 +57,49 @@ BEGIN
         IF UPDATE(BloodType) SET @AffectedColumns = @AffectedColumns + 'BloodType, '
 
         SET @AffectedColumns = LEFT(@AffectedColumns, LEN(@AffectedColumns) - 1) -- Remove trailing comma
+	    EXEC LogAction @Action, 'Patients', @ID, @AffectedColumns, @ActionDateTime;
     END
     ELSE IF EXISTS (SELECT * FROM inserted)
     BEGIN
         SET @Action = 'I'
-        SELECT @ID = PatientID FROM inserted
+        DECLARE insert_cursor CURSOR FOR
+            SELECT PatientID
+            FROM inserted;
+
+        OPEN insert_cursor;
+        FETCH NEXT FROM insert_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL';
+            EXEC LogAction @Action, 'Patients', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM insert_cursor INTO @ID;
+        END;
+
+        CLOSE insert_cursor;
+        DEALLOCATE insert_cursor;
     END
     ELSE
     BEGIN
         SET @Action = 'D'
-        SELECT @ID = PatientID FROM deleted
+        DECLARE delete_cursor CURSOR FOR
+            SELECT PatientID
+            FROM deleted;
+
+        OPEN delete_cursor;
+        FETCH NEXT FROM delete_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL';
+            EXEC LogAction @Action, 'Patients', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM delete_cursor INTO @ID;
+        END;
+
+        CLOSE delete_cursor;
+        DEALLOCATE delete_cursor;
     END
 
-	EXEC LogAction @Action, 'Patients', @ID, @AffectedColumns, @ActionDateTime;
 END
 GO
 
@@ -101,20 +131,50 @@ BEGIN
         IF UPDATE(DateHired) SET @AffectedColumns = @AffectedColumns + 'DateHired, ';
         
         SET @AffectedColumns = LEFT(@AffectedColumns, LEN(@AffectedColumns) - 1);
+        EXEC LogAction @Action, 'Staff', @ID, @AffectedColumns, @ActionDateTime;
     END
     ELSE IF EXISTS (SELECT * FROM inserted)
     BEGIN
         SET @Action = 'I';
-        SELECT @ID = StaffID FROM inserted;
+        DECLARE insert_cursor CURSOR FOR
+            SELECT StaffID
+            FROM inserted;
+
+        OPEN insert_cursor;
+        FETCH NEXT FROM insert_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL'; -- For INSERT, all columns are affected
+            EXEC LogAction @Action, 'Staff', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM insert_cursor INTO @ID;
+        END;
+
+        CLOSE insert_cursor;
+        DEALLOCATE insert_cursor;
     END
     -- For delete actions
     ELSE
     BEGIN
         SET @Action = 'D';
-        SELECT @ID = StaffID FROM deleted;
+        DECLARE delete_cursor CURSOR FOR
+            SELECT StaffID
+            FROM deleted;
+
+        OPEN delete_cursor;
+        FETCH NEXT FROM delete_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL'; -- For DELETE, all columns are affected
+            EXEC LogAction @Action, 'Staff', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM delete_cursor INTO @ID;
+        END;
+
+        CLOSE delete_cursor;
+        DEALLOCATE delete_cursor;
     END
 
-    EXEC LogAction @Action, 'Staff', @ID, @AffectedColumns, @ActionDateTime;
 END
 GO
 
@@ -142,19 +202,48 @@ BEGIN
         IF UPDATE(LicenseNumber) SET @AffectedColumns = @AffectedColumns + 'LicenseNumber, ';
 
         SET @AffectedColumns = LEFT(@AffectedColumns, LEN(@AffectedColumns) - 1);
+        EXEC LogAction @Action, 'Doctors', @ID, @AffectedColumns, @ActionDateTime;
     END
     ELSE IF EXISTS (SELECT * FROM inserted)
     BEGIN
         SET @Action = 'I';
-        SELECT @ID = DoctorID FROM inserted;
+        DECLARE inserted_cursor CURSOR FOR
+            SELECT DoctorID
+            FROM inserted;
+
+        OPEN inserted_cursor;
+        FETCH NEXT FROM inserted_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL';
+            EXEC LogAction @Action, 'Doctors', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM inserted_cursor INTO @ID;
+        END;
+
+        CLOSE inserted_cursor;
+        DEALLOCATE inserted_cursor;
     END
     ELSE IF EXISTS (SELECT * FROM deleted)
     BEGIN
         SET @Action = 'D';
-        SELECT @ID = DoctorID FROM deleted;
-    END
+        DECLARE deleted_cursor CURSOR FOR
+            SELECT DoctorID
+            FROM deleted;
 
-    EXEC LogAction @Action, 'Doctors', @ID, @AffectedColumns, @ActionDateTime;
+        OPEN deleted_cursor;
+        FETCH NEXT FROM deleted_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL'; -- For DELETE, all columns are affected
+            EXEC LogAction @Action, 'Doctors', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM deleted_cursor INTO @ID;
+        END;
+
+        CLOSE deleted_cursor;
+        DEALLOCATE deleted_cursor;
+    END
 END;
 GO
 
@@ -185,23 +274,48 @@ BEGIN
         IF UPDATE(Status) SET @AffectedColumns = @AffectedColumns + 'Status, ';
 
         SET @AffectedColumns = LEFT(@AffectedColumns, LEN(@AffectedColumns) - 1);
+        EXEC LogAction @Action, 'Appointments', @ID, @AffectedColumns, @ActionDateTime;
     END
     ELSE IF EXISTS (SELECT * FROM inserted)
     BEGIN
         SET @Action = 'I';
-        SELECT @ID = AppointmentID FROM inserted;
+        DECLARE insert_cursor CURSOR FOR
+            SELECT AppointmentID
+            FROM inserted;
 
-        SET @AffectedColumns = 'ALL';
+        OPEN insert_cursor;
+        FETCH NEXT FROM insert_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL'; -- For INSERT, all columns are affected
+            EXEC LogAction @Action, 'Appointments', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM insert_cursor INTO @ID;
+        END;
+
+        CLOSE insert_cursor;
+        DEALLOCATE insert_cursor;
     END
     ELSE IF EXISTS (SELECT * FROM deleted)
     BEGIN
         SET @Action = 'D';
-        SELECT @ID = AppointmentID FROM deleted;
+        DECLARE delete_cursor CURSOR FOR
+            SELECT AppointmentID
+            FROM deleted;
 
-        SET @AffectedColumns = 'ALL';
+        OPEN delete_cursor;
+        FETCH NEXT FROM delete_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL'; -- For DELETE, all columns are affected
+            EXEC LogAction @Action, 'Appointments', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM delete_cursor INTO @ID;
+        END;
+
+        CLOSE delete_cursor;
+        DEALLOCATE delete_cursor;
     END
-
-    EXEC LogAction @Action, 'Appointments', @ID, @AffectedColumns, @ActionDateTime;
 END;
 GO
 
@@ -232,23 +346,49 @@ BEGIN
         IF UPDATE(Notes) SET @AffectedColumns = @AffectedColumns + 'Notes, ';
 
         SET @AffectedColumns = LEFT(@AffectedColumns, LEN(@AffectedColumns) - 1);
+        EXEC LogAction @Action, 'MedicalRecords', @ID, @AffectedColumns, @ActionDateTime;
     END
     ELSE IF EXISTS (SELECT * FROM inserted)
     BEGIN
         SET @Action = 'I';
-        SELECT @ID = RecordID FROM inserted;
+        DECLARE insert_cursor CURSOR FOR
+            SELECT RecordID
+            FROM inserted;
 
-        SET @AffectedColumns = 'ALL';
+        OPEN insert_cursor;
+        FETCH NEXT FROM insert_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL';
+            EXEC LogAction @Action, 'MedicalRecords', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM insert_cursor INTO @ID;
+        END;
+
+        CLOSE insert_cursor;
+        DEALLOCATE insert_cursor;
     END
     ELSE IF EXISTS (SELECT * FROM deleted)
     BEGIN
         SET @Action = 'D';
-        SELECT @ID = RecordID FROM deleted;
+        DECLARE delete_cursor CURSOR FOR
+            SELECT RecordID
+            FROM deleted;
 
-        SET @AffectedColumns = 'ALL';
+        OPEN delete_cursor;
+        FETCH NEXT FROM delete_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL';
+            EXEC LogAction @Action, 'MedicalRecords', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM delete_cursor INTO @ID;
+        END;
+
+        CLOSE delete_cursor;
+        DEALLOCATE delete_cursor;
     END
 
-    EXEC LogAction @Action, 'MedicalRecords', @ID, @AffectedColumns, @ActionDateTime;
 END;
 GO
 
@@ -279,23 +419,49 @@ BEGIN
         IF UPDATE(Supplier) SET @AffectedColumns = @AffectedColumns + 'Supplier, ';
 
         SET @AffectedColumns = LEFT(@AffectedColumns, LEN(@AffectedColumns) - 1);
+        EXEC LogAction @Action, 'Inventory', @ID, @AffectedColumns, @ActionDateTime;
     END
     ELSE IF EXISTS (SELECT * FROM inserted)
     BEGIN
         SET @Action = 'I';
-        SELECT @ID = ItemID FROM inserted;
+        DECLARE insert_cursor CURSOR FOR
+            SELECT ItemID
+            FROM inserted;
 
-        SET @AffectedColumns = 'ALL';
+        OPEN insert_cursor;
+        FETCH NEXT FROM insert_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL'; -- For INSERT, all columns are affected
+            EXEC LogAction @Action, 'Inventory', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM insert_cursor INTO @ID;
+        END;
+
+        CLOSE insert_cursor;
+        DEALLOCATE insert_cursor;
     END
     ELSE IF EXISTS (SELECT * FROM deleted)
     BEGIN
         SET @Action = 'D';
-        SELECT @ID = ItemID FROM deleted;
+        DECLARE delete_cursor CURSOR FOR
+            SELECT ItemID
+            FROM deleted;
 
-        SET @AffectedColumns = 'ALL';
+        OPEN delete_cursor;
+        FETCH NEXT FROM delete_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL'; -- For DELETE, all columns are affected
+            EXEC LogAction @Action, 'Inventory', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM delete_cursor INTO @ID;
+        END;
+
+        CLOSE delete_cursor;
+        DEALLOCATE delete_cursor;
     END
 
-    EXEC LogAction @Action, 'Inventory', @ID, @AffectedColumns, @ActionDateTime;
 END;
 GO
 
@@ -325,23 +491,49 @@ BEGIN
         IF UPDATE(PaymentDate) SET @AffectedColumns = @AffectedColumns + 'PaymentDate, ';
 
         SET @AffectedColumns = LEFT(@AffectedColumns, LEN(@AffectedColumns) - 1);
+        EXEC LogAction @Action, 'Billing', @ID, @AffectedColumns, @ActionDateTime;
     END
     ELSE IF EXISTS (SELECT * FROM inserted)
     BEGIN
         SET @Action = 'I';
-        SELECT @ID = BillID FROM inserted;
+        DECLARE insert_cursor CURSOR FOR
+            SELECT BillID
+            FROM inserted;
 
-        SET @AffectedColumns = 'ALL';
+        OPEN insert_cursor;
+        FETCH NEXT FROM insert_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL'; -- For INSERT, all columns are affected
+            EXEC LogAction @Action, 'Billing', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM insert_cursor INTO @ID;
+        END;
+
+        CLOSE insert_cursor;
+        DEALLOCATE insert_cursor;
     END
     ELSE IF EXISTS (SELECT * FROM deleted)
     BEGIN
         SET @Action = 'D';
-        SELECT @ID = BillID FROM deleted;
+        DECLARE delete_cursor CURSOR FOR
+            SELECT BillID
+            FROM deleted;
 
-        SET @AffectedColumns = 'ALL';
+        OPEN delete_cursor;
+        FETCH NEXT FROM delete_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL'; -- For DELETE, all columns are affected
+            EXEC LogAction @Action, 'Billing', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM delete_cursor INTO @ID;
+        END;
+
+        CLOSE delete_cursor;
+        DEALLOCATE delete_cursor;
     END
 
-    EXEC LogAction @Action, 'Billing', @ID, @AffectedColumns, @ActionDateTime;
 END;
 GO
 
@@ -372,22 +564,52 @@ BEGIN
         IF UPDATE(AccountStatus) SET @AffectedColumns = @AffectedColumns + 'AccountStatus, ';
 
         SET @AffectedColumns = LEFT(@AffectedColumns, LEN(@AffectedColumns) - 1);
+        EXEC LogAction @Action, 'Users', @ID, @AffectedColumns, @ActionDateTime;
     END
     ELSE IF EXISTS (SELECT * FROM inserted)
     BEGIN
         SET @Action = 'I';
-        SELECT @ID = UserID FROM inserted;
+        DECLARE insert_cursor CURSOR FOR
+            SELECT UserID
+            FROM inserted;
 
-        SET @AffectedColumns = 'ALL';
+        OPEN insert_cursor;
+        FETCH NEXT FROM insert_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL'; -- For INSERT, all columns are affected
+            EXEC LogAction @Action, 'Users', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM insert_cursor INTO @ID;
+        END;
+
+        CLOSE insert_cursor;
+        DEALLOCATE insert_cursor;
     END
     ELSE IF EXISTS (SELECT * FROM deleted)
     BEGIN
         SET @Action = 'D';
-        SELECT @ID = UserID FROM deleted;
+        DECLARE delete_cursor CURSOR FOR
+            SELECT UserID
+            FROM deleted;
 
-        SET @AffectedColumns = 'ALL';
+        OPEN delete_cursor;
+        FETCH NEXT FROM delete_cursor INTO @ID;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            SET @AffectedColumns = 'ALL'; -- For DELETE, all columns are affected
+            EXEC LogAction @Action, 'Users', @ID, @AffectedColumns, @ActionDateTime;
+            FETCH NEXT FROM delete_cursor INTO @ID;
+        END;
+
+        CLOSE delete_cursor;
+        DEALLOCATE delete_cursor;
     END
 
-    EXEC LogAction @Action, 'Users', @ID, @AffectedColumns, @ActionDateTime;
 END;
 GO
+
+
+
+SELECT * FROM Audit;
