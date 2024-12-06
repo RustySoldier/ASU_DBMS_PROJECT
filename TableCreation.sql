@@ -1,6 +1,17 @@
 --CLEANING UP EVERYTHING:
+/* 
+	EDITING A FEW THINGS:
 
-IF OBJECT_ID('dbo.Staff', 'U') IS NOT NULL DROP TABLE dbo.Staff;
+	1. REMOVING THE CYCLIC CONNECTION BETWEEN APPOINTMENTS, PATIENTS AND BILLING, MEDICAL RECORDS
+	2. DOCTORS ARE A MEMBER OF STAFFS THEIR IDS SHOULD ALSO BE IN STAFF TABLE 
+	
+	NOTE FOR FUTURE:
+	1. PRESCRIPTION'S DATA HAVE TO BE IN COMMAS OR ANY DELIMITER SO THAT IT CAN BE EXTRACTED COMPARED IN INVENTORY AND BILING CAN BE PERFORMED
+	2. A DOCTOR CANNOT HAVE 2 APPOINTMENT AT THE SAME TIME, TO CREATE APPOINTMENT PREVIOUS APPOINTMENT HAVE TO BE CHECKED, GIVEN IT TAKE HALF HOUR TO TREAT A PATIENT
+	3. ADD AUDIT TABLE
+*/
+
+USE DBMS_PROJECT;
 
 IF OBJECT_ID('dbo.Users', 'U') IS NOT NULL DROP TABLE dbo.Users;
 
@@ -14,14 +25,19 @@ IF OBJECT_ID('dbo.Appointments', 'U') IS NOT NULL DROP TABLE dbo.Appointments;
 
 IF OBJECT_ID('dbo.Doctors', 'U') IS NOT NULL DROP TABLE dbo.Doctors;
 
+IF OBJECT_ID('dbo.Staff', 'U') IS NOT NULL DROP TABLE dbo.Staff;
+
 IF OBJECT_ID('dbo.Patients', 'U') IS NOT NULL DROP TABLE dbo.Patients;
+
+
+
 
 --CREATING TABLES:
 
 -- TABLE 1: PATIENTS
 
 CREATE TABLE Patients (
-    PatientID INT NOT NULL PRIMARY KEY,
+    PatientID INT NOT NULL,
     FirstName VARCHAR(50) NOT NULL,
     LastName VARCHAR(50) NOT NULL,
     DateOfBirth DATE NOT NULL,
@@ -30,27 +46,48 @@ CREATE TABLE Patients (
     Address VARCHAR(255) NOT NULL,
     EmergencyContact VARCHAR(20) NOT NULL,
     BloodType CHAR(3) NOT NULL,
-    MedicalHistory TEXT NULL
+
+	CONSTRAINT PK_PATIENT PRIMARY KEY (PatientID)
 );
 SELECT * FROM Patients;
 
--- TABLE 2: DOCTORS
+--TABLE 2: STAFF
+
+
+CREATE TABLE Staff (
+    StaffID INT NOT NULL,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Role VARCHAR(50) NOT NULL,
+    Department VARCHAR(50) NOT NULL,
+    ContactNumber VARCHAR(20) NULL,
+    Email VARCHAR(100) NULL,
+    DateHired DATE NOT NULL,
+	CONSTRAINT PK_STAFF PRIMARY KEY (StaffID)
+);
+SELECT * FROM Staff;
+
+
+-- TABLE 3: DOCTORS
 
 CREATE TABLE Doctors (
-    DoctorID INT NOT NULL PRIMARY KEY,
+    DoctorID INT NOT NULL,
     FirstName VARCHAR(50) NOT NULL,
     LastName VARCHAR(50) NOT NULL,
     Specialization VARCHAR(100) NOT NULL,
     ContactNumber VARCHAR(20) NOT NULL,
     Email VARCHAR(100) NOT NULL,
-    LicenseNumber VARCHAR(50) NOT NULL
+    LicenseNumber VARCHAR(50) NOT NULL,
+	
+	CONSTRAINT FK_DOCTOR_ID FOREIGN KEY (DoctorID) REFERENCES STAFF(StaffID),
+	CONSTRAINT PK_DOCTOR PRIMARY KEY (DoctorID)
 );
 SELECT * FROM Doctors;
 
---TABLE 3: APPOINTMENTS
+--TABLE 4: APPOINTMENTS
 
 CREATE TABLE Appointments (
-    AppointmentID INT NOT NULL PRIMARY KEY,
+    AppointmentID INT NOT NULL,
     PatientID INT NOT NULL,
     DoctorID INT NOT NULL,
     AppointmentDate DATE NOT NULL,
@@ -58,15 +95,18 @@ CREATE TABLE Appointments (
     Purpose VARCHAR(100) NOT NULL,
     Status VARCHAR(50) NOT NULL,
 
-    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
-    FOREIGN KEY (DoctorID) REFERENCES Doctors(DoctorID)
+	CONSTRAINT UNQ_PA_APPOINTMENT UNIQUE (PatientID,AppointmentID),
+	CONSTRAINT UNQ_PDAD_APPOINTMENT  UNIQUE (PatientID,DoctorID,AppointmentDate),
+	CONSTRAINT PK_APPOINTMENTS PRIMARY KEY (AppointmentID),
+    CONSTRAINT FK_PATIENT_APPOINTMENT FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
+    CONSTRAINT FK_ FOREIGN KEY (DoctorID) REFERENCES Doctors(DoctorID)
 );
 SELECT * FROM Appointments;
 
---TABLE 4: MEDICAL RECORDS
+--TABLE 5: MEDICAL RECORDS
 
 CREATE TABLE MedicalRecords (
-    RecordID INT NOT NULL PRIMARY KEY,
+    RecordID INT NOT NULL,
     PatientID INT NOT NULL,
     DoctorID INT NOT NULL,
     VisitDate DATE NULL,
@@ -74,12 +114,13 @@ CREATE TABLE MedicalRecords (
     Prescription TEXT NULL,
     Notes TEXT NULL,
 
-    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
-    FOREIGN KEY (DoctorID) REFERENCES Doctors(DoctorID)
+	CONSTRAINT FK_PATIENT_DOCTOR_REF FOREIGN KEY(PatientID,DoctorID,VisitDate) REFERENCES Appointments(PatientID,DoctorID,AppointmentDate),
+	CONSTRAINT PK_MEDICAL_RECORDS PRIMARY KEY(RecordID)
+
 );
 SELECT * FROM MedicalRecords;
 
---TABLE 5: INVENTORY
+--TABLE 6: INVENTORY
 
 CREATE TABLE Inventory (
     ItemID INT NOT NULL PRIMARY KEY,
@@ -92,37 +133,22 @@ CREATE TABLE Inventory (
 );
 SELECT * FROM Inventory;
 
---TABLE 6: BILLINGS
+--TABLE 7: BILLINGS
 
 CREATE TABLE Billing (
-    BillID INT NOT NULL PRIMARY KEY,
+    BillID INT NOT NULL,
     PatientID INT NOT NULL,
     AppointmentID INT NOT NULL,
     TotalAmount DECIMAL(10, 2) NOT NULL,
     PaymentStatus CHAR(10) NOT NULL,
     PaymentDate DATETIME NULL,
 
-    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
-    FOREIGN KEY (AppointmentID) REFERENCES Appointments(AppointmentID)
+   CONSTRAINT PK_BILLID PRIMARY KEY (BillID),
+   CONSTRAINT FK_PA_BILLING FOREIGN KEY (PatientID,AppointmentID) REFERENCES Appointments(PatientID,AppointmentID)
 );
 SELECT * FROM Billing;
 
---TABLE 7: STAFF
-
-
-CREATE TABLE Staff (
-    StaffID INT NOT NULL PRIMARY KEY,
-    FirstName VARCHAR(50) NOT NULL,
-    LastName VARCHAR(50) NOT NULL,
-    Role VARCHAR(50) NOT NULL,
-    Department VARCHAR(50) NOT NULL,
-    ContactNumber VARCHAR(20) NULL,
-    Email VARCHAR(100) NULL,
-    DateHired DATE NOT NULL
-);
-SELECT * FROM Staff;
-
---TABLE 8: Users
+--TABLE 9: Users
 
 
 CREATE TABLE Users (
@@ -135,3 +161,14 @@ CREATE TABLE Users (
     AccountStatus CHAR(10) NOT NULL
 );
 SELECT * FROM Users;
+
+--TABLE 10: AUDIT
+/* Yet to decide*/
+
+-- CREATE TABLE AUDIT
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/* INSERT INTO TABLES*/
+
