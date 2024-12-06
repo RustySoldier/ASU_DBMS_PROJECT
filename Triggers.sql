@@ -139,8 +139,6 @@ BEGIN
         IF UPDATE(FirstName) SET @AffectedColumns = @AffectedColumns + 'FirstName, ';
         IF UPDATE(LastName) SET @AffectedColumns = @AffectedColumns + 'LastName, ';
         IF UPDATE(Specialization) SET @AffectedColumns = @AffectedColumns + 'Specialization, ';
-        IF UPDATE(ContactNumber) SET @AffectedColumns = @AffectedColumns + 'ContactNumber, ';
-        IF UPDATE(Email) SET @AffectedColumns = @AffectedColumns + 'Email, ';
         IF UPDATE(LicenseNumber) SET @AffectedColumns = @AffectedColumns + 'LicenseNumber, ';
 
         SET @AffectedColumns = LEFT(@AffectedColumns, LEN(@AffectedColumns) - 1);
