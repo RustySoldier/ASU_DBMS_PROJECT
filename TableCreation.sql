@@ -10,8 +10,7 @@
 	2. A DOCTOR CANNOT HAVE 2 APPOINTMENT AT THE SAME TIME, TO CREATE APPOINTMENT PREVIOUS APPOINTMENT HAVE TO BE CHECKED, GIVEN IT TAKE HALF HOUR TO TREAT A PATIENT
 	3. ADD AUDIT TABLE
 */
-
-USE DBMS_PROJECT;
+IF OBJECT_ID('dbo.Audit', 'U') IS NOT NULL DROP TABLE dbo.Audit;
 
 IF OBJECT_ID('dbo.Users', 'U') IS NOT NULL DROP TABLE dbo.Users;
 
@@ -163,11 +162,16 @@ CREATE TABLE Users (
 SELECT * FROM Users;
 
 --TABLE 10: AUDIT
-/* Yet to decide*/
+
+CREATE TABLE Audit(
+    AuditId INT NOT NULL PRIMARY KEY,
+    TableName VARCHAR(20) NOT NULL,
+    Action VARCHAR(10) NOT NULL,
+    AffectedColumns TEXT NOT NULL,
+    ActionDateTime DATETIME NOT NULL
+)
 
 -- CREATE TABLE AUDIT
-
-
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 /* INSERT INTO TABLES*/
