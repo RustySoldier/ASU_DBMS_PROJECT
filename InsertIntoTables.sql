@@ -45,7 +45,8 @@ VALUES
 (123280281,'Naveen', 'Diwedi',  'Doctor','OPD',         '7979772980','1997-02-5', 'drnkd1@gmail.com'),
 (123280282,'Anil',   'Tripathi','Doctor','Surgery',     '1739020210','1997-03-01','drakt1@gmail.com'),
 (123280283,'Uday',   'Pathak',  'Doctor','Medicine',    '8124313403','1999-09-13','drukp1@gmail.com'),
-(123280284,'Vinamra','Parashar','Doctor','Neurology',   '7001425323','2017-11-11','drvp22@gmail.com');
+(123280284,'Vinamra','Parashar','Doctor','Neurology',   '7001425323','2017-11-11','drvp22@gmail.com'),
+(123280285,'Nita',	 'Tripathi','Doctor','OBS&GYN',		'2813943913','1997-11-11','drnt22@gmail.com');
 
 SELECT * from Staff;
 
@@ -59,4 +60,35 @@ VALUES
 
 SELECT * FROM Doctors;
 
+INSERT INTO Inventory(ItemID,ItemName,Category,Quantity,UnitPrice,ExpiryDate,Supplier)
+VALUES
+(1,'Spironolactorne','aldosterone receptor antagonists',100,0.28,'2025-12-06','Healthy Life Pharma'),
+(2,'Prednisolone-40mg','corticosteroids',100,0.30,'2025-11-03','Pfizer'),
+(3,'Ferrous-sulphate','supplement',100,0.27,'2025-07-13','Crown Technology'),
+(4,'Aspirin','non-steroidal anti-inflammatory',100,0.11,'2026-09-14','Bayer'),
+(5,'Clopidogrel','antiplatelet',100,0.48,'2026-12-04','IOLCP'),
+(6,'Telmisartan','angiotensin II receptor antagonists',100,2.04,'2025-05-04','Global Pharma Tek'),
+(7,'Amlodipine','calcium channel blockers',100,0.55,'2025-03-12','Reddy Laboratories'),
+(8,'Levosalbutamol','short-acting beta-agonist',100,0.35,'2026-01-12','Sumitomo Pharma America'),
+(9,'Metformin 1000mg','biguanides',100,0.40,'2028-01-05','Actavis Labs'),
+(10,'Cefixime 100mg B.D.','cephalosporin antibiotics',100, 33.15,'2025-08-12','ACI Ltd.'),
+(11,'Furosemide','loop diuretics',100,0.20,'2025-05-02','Mangalam Drugs'),
+(12,'Ramipril',' angiotensin-converting enzyme (ACE) inhibitor',100,0.15,'2025-09-11','Reddy Laboratories'),
+(13,'Olopatadine Eye Drops','mast cell stabilizers',100,17.54,'2026-02-15','Alcon Inc'),
+(14,'Ergotamine','ergot alkaloids',100,3.03,'2025-06-09','LGM Pharma'),
+(15,'Amoxicillin + Clavulanic Acid 625mg','Antibiotic+beta lactamase inhibitor',100,2.25,'2027-05-05','Apollo Pharmaceuticals'),
+(16,'Ivermectin','anthelmintics',100,0.20,'2025-11-11', 'Tocris Bioscience'),
+(17,'Permethrin','scabicides',100,2.00,'2026-10-14', 'Control Solutions Inc'),
+(18,'Ciprofloxacin','floroquinolone antibiotics',100,5.57,'2025-10-11','Pfizer'),
+(19,'Lisinopril','ACE inhibitors',100,0.49,'2031-01-01','Lupin Pharmaceuticals'),
+(20,'Furosemide','loop diuretics',100,0.15,'2025-05-11','Mangalam Drug'),
+(21,'Linezolid','oxazolidinones', 100,1.80,'2027-10-14','Pfizer'),
+(22,'Levothyroxine','hormones', 100,0.32,'2025-05-01', 'Yaral Pharma'),
+(23,'Zidovudine','NRTIs',100,0.39,'2026-03-15','Cipla Ltd.'),
+(24,'Neomycin+Hydrocortisone','Antibiotics+Steroids',100,39.70,'2026-12-03','Pfizer'),
+(25,'IV Ringers Lactate','Crystalloids',100,8.00,'2026-02-11','Baxter Healthcare'),
+(26,'Metamizole','Pyrazolone',100,0.20,'2025-08-13','Simson Pharma Ltd.'),
+(27,'Vancomycin','glycopeptide antibiotics',100,26.30,'2027-05-12','Pfizer'),
+(28,'Cefotaxime','cephalosporin antibiotics',100,2.77,'2026-10-05','SteriMax');
 
+Select * from Inventory

@@ -128,7 +128,7 @@ CREATE TABLE Inventory (
     ItemName VARCHAR(100) NOT NULL,
     Category VARCHAR(50) NOT NULL,
     Quantity INT NOT NULL,
-    UnitPrice DECIMAL(10, 2) NOT NULL,
+    UnitPrice MONEY NOT NULL,
     ExpiryDate DATE NULL,
     Supplier VARCHAR(100) NOT NULL
 );
