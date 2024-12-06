@@ -1,6 +1,11 @@
+
+
 USE DBMS_PROJECT;
 GO
+IF OBJECT_ID('tr_patient_updateinsertdelete') IS NOT NULL
+	DROP TRIGGER tr_patient_updateinsertdelete;
 
+GO
 CREATE TRIGGER tr_patient_updateinsertdelete
 on Patients
 AFTER INSERT, UPDATE, DELETE

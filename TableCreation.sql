@@ -162,6 +162,7 @@ CREATE TABLE Users (
 SELECT * FROM Users;
 
 --TABLE 10: AUDIT
+<<<<<<< Updated upstream
 
 CREATE TABLE Audit(
     AuditId INT NOT NULL PRIMARY KEY,
@@ -172,3 +173,13 @@ CREATE TABLE Audit(
     ActionDateTime DATETIME NOT NULL
 )
 SELECT * FROM Audit;
+=======
+/* Yet to decide*/
+
+-- CREATE TABLE AUDIT
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/* INSERT INTO TABLES*/
+>>>>>>> Stashed changes
