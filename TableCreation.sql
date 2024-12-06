@@ -173,13 +173,4 @@ CREATE TABLE Audit(
     ActionDateTime DATETIME NOT NULL
 )
 SELECT * FROM Audit;
-=======
-/* Yet to decide*/
 
--- CREATE TABLE AUDIT
-
-
--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-/* INSERT INTO TABLES*/
->>>>>>> Stashed changes
