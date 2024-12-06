@@ -28,3 +28,35 @@ VALUES
 (180953217,'Isadora','Bell','1995-05-21','M','(587) 656-1513','Ap #553-7467 Sit Avenue','(458) 888-3074','O+'),
 (180953218,'Gareth','Manning','1988-03-09','M','(376) 390-6612','Ap #961-735 Dictum. Ave','(842) 478-8251','AB-'),
 (180953219,'Duncan','Harper','2011-07-25','M','(724) 445-3163','4787 Ac, Av.','(375) 109-2872','B-');
+
+
+/* INSERT INTO STAFF TABLE*/
+
+INSERT INTO Staff(StaffID,FirstName,LastName,Role,Department,ContactNumber,DateHired)
+VALUES
+(175653410,'Anand','Rai','Nurse','Opthalmology','9245452769','1997-07-17'),
+(175653411,'Pankaj','Rai','Nurse','OPD','8022932364','1998-04-30'),
+(175653412,'Birendar','Rai','OT Assistant','Surgery','4854211331','1997-04-13'),
+(175653413,'Monu','Upadhyay','Refractionist','Opthalmology','3482021386','1999-11-30'),
+(175653414,'Subodh','Kumar', 'Nurse', 'Medicine', '1398431948','2000-05-13');
+INSERT INTO Staff(StaffID,FirstName,LastName,Role,Department,ContactNumber,DateHired,Email)
+VALUES
+(123280280,'Santosh','Pandey',  'Doctor','Opthalmology','7391093719','1995-05-14','drskp1@yahoo.co.in'),
+(123280281,'Naveen', 'Diwedi',  'Doctor','OPD',         '7979772980','1997-02-5', 'drnkd1@gmail.com'),
+(123280282,'Anil',   'Tripathi','Doctor','Surgery',     '1739020210','1997-03-01','drakt1@gmail.com'),
+(123280283,'Uday',   'Pathak',  'Doctor','Medicine',    '8124313403','1999-09-13','drukp1@gmail.com'),
+(123280284,'Vinamra','Parashar','Doctor','Neurology',   '7001425323','2017-11-11','drvp22@gmail.com');
+
+SELECT * from Staff;
+
+INSERT INTO Doctors(DoctorID,FirstName,LastName,Specialization,LicenseNumber)
+VALUES
+(123280280,'Santosh','Pandey',  'Cataract Surgery',				 'NMC540213498'),
+(123280281,'Naveen', 'Diwedi',  'Physician',					 'NMC323493919'),
+(123280282,'Anil',   'Tripathi','Laproscopic Surgery',	         'NMC502401934'),
+(123280283,'Uday',   'Pathak',  'Physician',					 'NMC981384013'),
+(123280284,'Vinamra','Parashar','Neuroendovascular Intervention','NMC901301314');
+
+SELECT * FROM Doctors;
+
+
