@@ -3,7 +3,7 @@ USE DBMS_PROJECT;
 
 /* INSERT INTO TABLES*/
 
-SELECT * FROM Patients;
+
  
 
 INSERT INTO Patients(PatientID, FirstName,LastName,DateOfBirth,Gender,ContactNumber,Address,EmergencyContact,BloodType)
@@ -29,7 +29,7 @@ VALUES
 (180953218,'Gareth','Manning','1988-03-09','M','(376) 390-6612','Ap #961-735 Dictum. Ave','(842) 478-8251','AB-'),
 (180953219,'Duncan','Harper','2011-07-25','M','(724) 445-3163','4787 Ac, Av.','(375) 109-2872','B-');
 
-
+SELECT * FROM Patients;
 /* INSERT INTO STAFF TABLE*/
 
 INSERT INTO Staff(StaffID,FirstName,LastName,Role,Department,ContactNumber,DateHired)
