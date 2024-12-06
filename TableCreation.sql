@@ -166,13 +166,9 @@ SELECT * FROM Users;
 CREATE TABLE Audit(
     AuditId INT NOT NULL PRIMARY KEY,
     TableName VARCHAR(20) NOT NULL,
+    RecordID INT NOT NULL,
     Action VARCHAR(10) NOT NULL,
     AffectedColumns TEXT NOT NULL,
     ActionDateTime DATETIME NOT NULL
 )
-
--- CREATE TABLE AUDIT
--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-/* INSERT INTO TABLES*/
-
+SELECT * FROM Audit;
