@@ -26,7 +26,7 @@ IF OBJECT_ID('tr_users_Audit', 'TR') IS NOT NULL
 DROP TRIGGER tr_users_Audit;
 GO
 IF OBJECT_ID('tr_patient_updateinsertdelete') IS NOT NULL
-	DROP TRIGGER tr_patient_updateinsertdelete;
+DROP TRIGGER tr_patient_updateinsertdelete;
 GO
 -- CREATING TRIGGERS FOR MONITORING CHANGES IN TABLES.
 
