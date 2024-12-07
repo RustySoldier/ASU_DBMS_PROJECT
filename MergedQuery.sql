@@ -1,7 +1,61 @@
 CREATE DATABASE GROUP5;
 
 USE GROUP5;
+-- CLEANING UP EVERYTHING.
 
+-- DROPPING USER DEFINED FUNCTION STATEMENT.
+
+IF OBJECT_ID('dbo.GetTotalRevenue', 'FN') IS NOT NULL
+    DROP FUNCTION dbo.GetTotalRevenue;
+GO
+
+-- DELETING CREATE APPOINTMENT STORED PROCEDURE.
+
+IF OBJECT_ID('CreateAppointments') IS NOT NULL
+	DROP PROCEDURE CreateAppointments;
+GO
+
+--DROPPING LOG ACTION STORED PROCEDURE
+IF OBJECT_ID('LogAction') IS NOT NULL
+	DROP PROCEDURE  LogAction;
+
+-- DROPPING ALL THE VIEWS
+
+IF EXISTS (SELECT 1 FROM sys.views WHERE name = 'MedicationInventoryStatus')
+DROP VIEW MedicationInventoryStatus;
+
+IF EXISTS (SELECT 1 FROM sys.views WHERE name = 'PatientAppointmentDetails')
+DROP VIEW PatientAppointmentDetails;
+
+IF EXISTS (SELECT 1 FROM sys.views WHERE name = 'UnpaidMedicalBillingOverview')
+DROP VIEW UnpaidMedicalBillingOverview;
+
+-- CLEANING UPP ALL CURSORS
+
+IF OBJECT_ID('tr_appointments_Audit', 'TR') IS NOT NULL
+DROP TRIGGER tr_appointments_Audit;
+
+IF OBJECT_ID('tr_billing_Audit', 'TR') IS NOT NULL
+DROP TRIGGER tr_billing_Audit;
+-- CLEANING UP ALL THE TABLES
+
+IF OBJECT_ID('Audit', 'U') IS NOT NULL DROP TABLE Audit;
+
+IF OBJECT_ID('Users', 'U') IS NOT NULL DROP TABLE Users;
+
+IF OBJECT_ID('Billing', 'U') IS NOT NULL DROP TABLE Billing;
+
+IF OBJECT_ID('Inventory', 'U') IS NOT NULL DROP TABLE Inventory;
+
+IF OBJECT_ID('MedicalRecords', 'U') IS NOT NULL DROP TABLE MedicalRecords;
+
+IF OBJECT_ID('Appointments', 'U') IS NOT NULL DROP TABLE Appointments;
+
+IF OBJECT_ID('Doctors', 'U') IS NOT NULL DROP TABLE Doctors;
+
+IF OBJECT_ID('Staff', 'U') IS NOT NULL DROP TABLE Staff;
+
+IF OBJECT_ID('Patients', 'U') IS NOT NULL DROP TABLE Patients;
 --1. CREATING TABLES:
 
 -- TABLE 1: PATIENTS
@@ -287,7 +341,6 @@ BEGIN
 END
 
 -- INSERT THIS LINES AFTER THE TRIGGERS.
-EXEC CreateAppointments @PatientID = 180953215, @DoctorID = 123280282, @Purpose = 'Regular visit';
 Select * from Appointments;
 
 GO
@@ -495,7 +548,8 @@ VALUES
 (123280281,'Naveen', 'Diwedi',  'Physician',					 'NMC323493919'),
 (123280282,'Anil',   'Tripathi','Laproscopic Surgery',	         'NMC502401934'),
 (123280283,'Uday',   'Pathak',  'Physician',					 'NMC981384013'),
-(123280284,'Vinamra','Parashar','Neuroendovascular Intervention','NMC901301314');
+(123280284,'Vinamra','Parashar','Neuroendovascular Intervention','NMC901301314'),
+(123280285,'Nita',	 'Tripathi','OBS&GYN'                       ,'NMC901340349');
 
 SELECT * FROM Doctors;
 
@@ -618,29 +672,30 @@ Select * from MedicalRecords;
 /* Inserting into Billing */
 INSERT INTO Billing
 VALUES
-(200000001,180953200,326085120,1535.50,'Paid','2024-12-30 09:53:52'),
-(200000002,180953201,326085121,5565.00,'Paid','2024-12-08 14:22:52'),
-(200000003,180953202,326085122,7329.53,'Paid','2024-12-09 09:42:30'),
-(200000004,180953203,326085123,935.79,'Paid','2024-12-13 19:22:52'),
-(200000005,180953204,326085124,1350.51,'Paid','2024-12-08 11:52:52'),
-(200000006,180953205,326085125,560.76,'Paid','2024-12-31 15:42:52'),
-(200000007,180953206,326085126,4029.24,'Paid','2024-12-23 10:12:52'),
-(200000008,180953207,326085127,501.65,'Paid','2024-12-11 11:22:52'),
-(200000009,180953208,326085128,209.68,'Paid','2024-12-13 09:32:52'),
-(200000010,180953209,326085129,1094.53,'Paid','2024-12-15 06:42:52'),
-(200000011,180953210,326085130,1928.26,'Paid','2024-12-05 12:52:51'),
-(200000012,180953211,326085131,493.86,'Paid','2024-12-10 07:62:42'),
-(200000013,180953212,326085132,1140.67,'Paid','2025-01-01 10:62:32'),
-(200000014,180953213,326085133,1544.66,'Paid','2024-12-04 14:12:12'),
-(200000015,180953214,326085134,15350.30,'Paid','2025-02-03 15:52:42'),
-(200000016,180953215,326085135,119.65,'Paid','2025-01-30 17:32:42'),
-(200000017,180953216,326085136,1104.63,'Paid','2024-12-14 20:52:12'),
-(200000018,180953217,326085137,1140.43,'Paid','2024-12-07 22:32:12'),
-(200000019,180953218,326085138,110.13,'Paid','2024-12-30 19:52:52');
+(200000001,180953200,326085120,1535.50,'Paid',convert(datetime,'2024-12-30 09:53:52')),
+(200000002,180953201,326085121,5565.00,'Paid',convert(datetime,'2024-12-08 14:22:52')),
+(200000003,180953202,326085122,7329.53,'Paid',convert(datetime,'2024-12-09 09:42:30')),
+(200000004,180953203,326085123,935.79,'Paid',convert(datetime,'2024-12-13 19:22:52')),
+(200000005,180953204,326085124,1350.51,'Paid',convert(datetime,'2024-12-08 11:52:52')),
+(200000006,180953205,326085125,560.76,'Paid',convert(datetime,'2024-12-31 15:42:52')),
+(200000007,180953206,326085126,4029.24,'Paid',convert(datetime,'2024-12-23 10:12:52')),
+(200000008,180953207,326085127,501.65,'Paid',convert(datetime,'2024-12-11 11:22:52')),
+(200000009,180953208,326085128,209.68,'Paid',convert(datetime,'2024-12-13 09:32:52')),
+(200000010,180953209,326085129,1094.53,'Paid',convert(datetime,'2024-12-15 06:42:52')),
+(200000011,180953210,326085130,1928.26,'Paid',convert(datetime,'2024-12-05 12:52:51')),
+(200000012,180953211,326085131,493.86,'Paid',convert(datetime,'2024-12-10 07:32:42')),
+(200000013,180953212,326085132,1140.67,'Paid',convert(datetime,'2024-12-01 10:42:32')),
+(200000014,180953213,326085133,1544.66,'Paid',convert(datetime,'2024-12-04 14:12:12')),
+(200000015,180953214,326085134,15350.30,'Paid',convert(datetime,'2025-02-03 15:52:42')),
+(200000016,180953215,326085135,119.65,'Paid',convert(datetime,'2025-01-30 17:32:42')),
+(200000017,180953216,326085136,1104.63,'Paid',convert(datetime,'2024-12-14 20:52:12')),
+(200000018,180953217,326085137,1140.43,'Paid',convert(datetime,'2024-12-07 22:32:12')),
+(200000019,180953218,326085138,110.13,'Paid',convert(datetime,'2024-12-30 19:52:52'));
 
 
 INSERT INTO Billing(BillID,PatientID,AppointmentID,TotalAmount,PaymentStatus)
 VALUES(200000020,180953219,326085139,789.53,'Unpaid');
+Select * from Billing
 
 /* Inserting into Users */
 INSERT INTO USERS
@@ -668,7 +723,7 @@ WHERE PatientID = 180953215 and DoctorID =123280284;
 -- 1. DOCTORS CAN VIEW THIER SCHEDULE AND 
 -- 2. GET THE DETAILS ABOUT PATEIENT AND INTENTION OF APPOINTMENT.
 
-
+GO
 
 CREATE VIEW PatientAppointmentDetails AS
 SELECT 
@@ -734,7 +789,7 @@ GO
 
 SELECT * FROM MedicationInventoryStatus;
 SELECT * FROM PatientAppointmentDetails;
-SELECT * FROM MedicalBillingOverview;
+SELECT * FROM UnpaidMedicalBillingOverview ;
 GO
 
 
@@ -744,7 +799,7 @@ GO
 -- 1. FROM DATE
 -- 2. TO DATE
 
-CREATE FUNCTION GetTotalRevenue
+CREATE FUNCTION dbo.GetTotalRevenue
 (
     @StartDateTime DATETIME,
     @EndDateTime DATETIME
@@ -768,62 +823,8 @@ GO
 DECLARE @StartDate DATETIME = '2024-12-04 00:00:00';
 DECLARE @EndDate DATETIME = '2024-12-07 23:59:59';
 
-SELECT dbo.GetTotalRevenueBetweenDates(@StartDate, @EndDate) AS TotalRevenue;
+SELECT dbo.GetTotalRevenue(@StartDate, @EndDate) AS TotalRevenue;
 
 
--- CLEANING UP EVERYTHING.
 
--- DROPPING USER DEFINED FUNCTION STATEMENT.
 
-IF OBJECT_ID('dbo.GetTotalRevenue', 'FN') IS NOT NULL
-    DROP FUNCTION dbo.GetTotalRevenue;
-GO
-
--- DELETING CREATE APPOINTMENT STORED PROCEDURE.
-
-IF OBJECT_ID('CreateAppointments') IS NOT NULL
-	DROP PROCEDURE CreateAppointments;
-GO
-
---DROPPING LOG ACTION STORED PROCEDURE
-
-DROP PROCEDURE IF EXISTS LogAction;
-
--- DROPPING ALL THE VIEWS
-
-IF EXISTS (SELECT 1 FROM sys.views WHERE name = 'MedicationInventoryStatus')
-DROP VIEW MedicationInventoryStatus;
-
-IF EXISTS (SELECT 1 FROM sys.views WHERE name = 'PatientAppointmentDetails')
-DROP VIEW PatientAppointmentDetails;
-
-IF EXISTS (SELECT 1 FROM sys.views WHERE name = 'UnpaidMedicalBillingOverview')
-DROP VIEW UnpaidMedicalBillingOverview;
-
--- CLEANING UPP ALL CURSORS
-
-IF OBJECT_ID('tr_appointments_Audit', 'TR') IS NOT NULL
-DROP TRIGGER tr_appointments_Audit;
-
-IF OBJECT_ID('tr_billing_Audit', 'TR') IS NOT NULL
-DROP TRIGGER tr_billing_Audit;
-
--- CLEANING UP ALL THE TABLES
-
-IF OBJECT_ID('dbo.Audit', 'U') IS NOT NULL DROP TABLE dbo.Audit;
-
-IF OBJECT_ID('dbo.Users', 'U') IS NOT NULL DROP TABLE dbo.Users;
-
-IF OBJECT_ID('dbo.Billing', 'U') IS NOT NULL DROP TABLE dbo.Billing;
-
-IF OBJECT_ID('dbo.Inventory', 'U') IS NOT NULL DROP TABLE dbo.Inventory;
-
-IF OBJECT_ID('dbo.MedicalRecords', 'U') IS NOT NULL DROP TABLE dbo.MedicalRecords;
-
-IF OBJECT_ID('dbo.Appointments', 'U') IS NOT NULL DROP TABLE dbo.Appointments;
-
-IF OBJECT_ID('dbo.Doctors', 'U') IS NOT NULL DROP TABLE dbo.Doctors;
-
-IF OBJECT_ID('dbo.Staff', 'U') IS NOT NULL DROP TABLE dbo.Staff;
-
-IF OBJECT_ID('dbo.Patients', 'U') IS NOT NULL DROP TABLE dbo.Patients;
