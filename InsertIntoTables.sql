@@ -56,7 +56,8 @@ VALUES
 (123280281,'Naveen', 'Diwedi',  'Physician',					 'NMC323493919'),
 (123280282,'Anil',   'Tripathi','Laproscopic Surgery',	         'NMC502401934'),
 (123280283,'Uday',   'Pathak',  'Physician',					 'NMC981384013'),
-(123280284,'Vinamra','Parashar','Neuroendovascular Intervention','NMC901301314');
+(123280284,'Vinamra','Parashar','Neuroendovascular Intervention','NMC901301314'),
+(123280285,'Nita',	 'Tripathi','OBS&GYN',						 'NMC091384054');
 
 SELECT * FROM Doctors;
 
@@ -92,3 +93,8 @@ VALUES
 (28,'Cefotaxime','cephalosporin antibiotics',100,2.77,'2026-10-05','SteriMax');
 
 Select * from Inventory
+
+
+
+/*Medical Records*/
+
