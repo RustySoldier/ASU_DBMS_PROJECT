@@ -168,6 +168,7 @@ VALUES
 (175653412,'Birendar','Rai','OT Assistant','Surgery','4854211331','1997-04-13'),
 (175653413,'Monu','Upadhyay','Refractionist','Opthalmology','3482021386','1999-11-30'),
 (175653414,'Subodh','Kumar', 'Nurse', 'Medicine', '1398431948','2000-05-13');
+
 INSERT INTO Staff(StaffID,FirstName,LastName,Role,Department,ContactNumber,DateHired,Email)
 VALUES
 (123280280,'Santosh','Pandey',  'Doctor','Opthalmology','7391093719','1995-05-14','drskp1@yahoo.co.in'),
