@@ -44,9 +44,10 @@ WHERE
 GO
 
 -- JOINING MEDICAL RECORDS, BILLINGS AND PATIENT.
--- LINK PATIENT MEDICAL RECORDS TO THEIR CORRESPONDING BILLING TRANSACTIONS.
+-- 1. TRACK OUTSTANDING PAYMENTS.
+-- 2. IMPROVE FINANCIAL OVERSIGHT.
 
-CREATE VIEW MedicalBillingOverview AS
+CREATE VIEW UnpaidMedicalBillingOverview AS
 SELECT 
     mr.RecordID,
     mr.PatientID,
@@ -55,17 +56,17 @@ SELECT
     mr.Prescription,
     b.BillID,
     b.TotalAmount,
-    b.PaymentStatus,
-    b.PaymentDate
+    b.PaymentStatus
 FROM 
     MedicalRecords mr
 INNER JOIN 
     Patients p ON mr.PatientID = p.PatientID
 INNER JOIN 
-    Billing b ON mr.PatientID = b.PatientID AND mr.RecordID = b.AppointmentID;
+    Billing b ON mr.PatientID = b.PatientID AND mr.RecordID = b.AppointmentID
+WHERE 
+    b.PaymentStatus = 'Pending' OR b.PaymentStatus = 'Unpaid';
 GO
-
 
 SELECT * FROM MedicationInventoryStatus;
 SELECT * FROM PatientAppointmentDetails;
-SELECT * FROM MedicalBillingOverview;
+SELECT * FROM UnpaidMedicalBillingOverview;
